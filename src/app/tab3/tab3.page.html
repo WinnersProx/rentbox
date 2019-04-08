@@ -1,1 +1,30 @@
-<ion-content color="light">Third page </ion-content>
+<ion-content>
+    <ion-list>
+        <ion-item>
+            <ion-label color="light" class="text-bold">
+                <ion-icon name="contact"></ion-icon> {{ this.AuthUser.name }}
+            </ion-label>
+        </ion-item>
+        <ion-item class="text-muted">
+            <ion-icon name="mail" color="light"></ion-icon> {{ this.AuthUser.email }}
+        </ion-item>
+        <ion-item>
+            <ion-label color="light" class="text-bold">
+                <ion-icon name="albums"></ion-icon> About
+            </ion-label> 
+            <p class="text-muted">{{ this.AuthUser.about }}</p>
+        </ion-item>
+        <ion-item>
+            <ion-label color="light" class="text-bold">
+                <ion-icon name="phone-portrait"></ion-icon> Phone
+            </ion-label>
+            <p class="text-muted">{{ this.AuthUser.phone }}</p>
+        </ion-item>
+        <ion-item slot="buttom">
+            <ion-label class="text-bold" color="light">
+                <ion-icon name="close-circle" color="danger"></ion-icon> Logout
+            </ion-label>
+            
+        </ion-item>
+    </ion-list>
+</ion-content>

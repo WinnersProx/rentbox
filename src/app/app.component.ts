@@ -5,9 +5,11 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthenticationService } from './services/authentication.service';
 import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage';
 @Component({
   selector: 'app-root',
-  templateUrl: 'app.component.html'
+  templateUrl: 'app.component.html',
+  styleUrls : ['app.component.scss']
 })
 export class AppComponent {
   constructor(
@@ -15,7 +17,8 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private Auth: AuthenticationService,
-    private route: Router
+    private route: Router,
+    private store : Storage
   ) {
     this.initializeApp();
   }
@@ -24,12 +27,12 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.Auth.authenticationState.subscribe((state) => {
-        console.log("Auth changed", state);
-        if(state)
-          this.route.navigate(['tabs'])
-        else
-          this.route.navigate(['login']);
+      //set the token
+      this.store.get('__accessToken').then(AuthToken => {
+        this.Auth.setToken(AuthToken);
+      })
+      this.store.get('authUser').then(user => {
+        this.Auth.setAuthUser(user);
       })
     });
   }

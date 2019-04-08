@@ -1,4 +1,4 @@
 export interface Users {
-    email : string,
-    password : string
+    authUser : any,
+    __accessToken : string
 }

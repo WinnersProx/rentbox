@@ -1,60 +1,84 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Platform } from '@ionic/angular';
+import { Platform, LoadingController } from '@ionic/angular';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Users } from '../interfaces/users';
 import { Observable } from 'rxjs';
-let localStorage = window.localStorage;
-let AUTH_TOKEN = null;
+import { Storage } from '@ionic/storage';
+import { Router } from '@angular/router';
 let base_url = 'http://localhost/smartchat_api/users/';
-const httpOptions = {
-  headers : new HttpHeaders({
-    'Content-Type' : 'application/json',
-    'Authorization' : '__token'
-  })
-}
+
 @Injectable({
   providedIn: 'root'
 })
 
 export class AuthenticationService {
-  authenticationState = new BehaviorSubject(false);
-  constructor(private platform : Platform, private http : HttpClient) { 
-    this.platform.ready().then(()=>{
-      this.checkToken();
+  private authenticationState = new BehaviorSubject(false);
+  public accessToken = null;
+  private authUser = null;
+  private httpOptions = {
+    headers : new HttpHeaders({
+      'Content-Type' : 'application/json',
+      'Authorization' : this.getToken
     })
+  }
+  constructor(private platform : Platform, 
+    private http : HttpClient, 
+    private store : Storage, 
+    private route : Router) { 
+    
   }
   errorHandler(error : HttpErrorResponse){
     console.log(error);
   }
-  logIn(user:Users){
+  logIn(user){
     
-    return this.http.post<Users>(base_url + 'login.json',user.email, httpOptions)
-    .subscribe(data =>{
-      console.log(data);
+    this.http.post<Users>(base_url + 'login.json',{
+      email: user.username, 
+      password: user.password
+    }).subscribe(datas => {
+      this.store.set('__accessToken', datas.__accessToken)
+      this.store.set('authUser', datas.authUser);
+      this.setToken(datas.__accessToken);
+      this.setAuthUser(datas.authUser);
+      this.route.navigate(['tabs']);
     }, error => {
-      console.log(error);
+      console.log("Error occured", error);
     })
-    // AUTH_TOKEN = 'Bearer 12345';
-    // localStorage.setItem('_authToken', AUTH_TOKEN);
-    // this.authenticationState.next(true);
+
   }
   logOut(){
-    AUTH_TOKEN = '';
-    localStorage.removeItem('_authToken');
-    this.authenticationState.next(false);
+    this.store.remove('_authToken').then(cleared =>{
+      this.authenticationState.next(false);
+      this.store.remove('authUser');
+    });
+    
+    
   }
   isAuthenticated(){
     return this.authenticationState.value;
   }
+  setToken(token){
+    this.accessToken = token;
+  }
+  
+  get getToken(){
+    return this.accessToken;
+  }
+  get getAuthUser(){
+    return this.authUser;
+  }
   checkToken(){
-    localStorage.getItem('_authToken');
-    if(AUTH_TOKEN){
+    this.store.get('__accessToken').then(authToken => {
       this.authenticationState.next(true);
-    }
-    else{
+      this.accessToken = authToken
+    }, error =>{
       this.authenticationState.next(false);
-    }
+    });
+    return this.authenticationState.value;
     
+  }
+  setAuthUser(user){
+    this.authUser = user;
   }
 }

@@ -7,11 +7,17 @@ const routes: Routes = [
     loadChildren: './home/home.module#HomePageModule'
   },
   { 
+    path: 'home', 
+    loadChildren: './home/home.module#HomePageModule'
+  },
+  { 
     path: 'tabs', 
     loadChildren: './tabs/tabs.module#TabsPageModule',
     canActivate : [AuthGuardService]
   },
   { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
+  { path: 'chat-infos', loadChildren: './chat-infos/chat-infos.module#ChatInfosPageModule' },
+  { path: 'chat/:userId', loadChildren: './chat-infos/chat-infos.module#ChatInfosPageModule' },
   
 ]; 
 @NgModule({
