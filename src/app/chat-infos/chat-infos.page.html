@@ -1,18 +1,17 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button color="light" defaultHref="tabs"></ion-back-button>
-      <ion-item slot="start" padding-start="0">
+      <ion-back-button color="light" defaultHref="tabs" (click)="dismiss()"></ion-back-button>
         <ion-avatar>
           <img src="http://localhost/smartchat_api/img/{{ getCurrentFriend.avatar }}"/>
         </ion-avatar>
-      </ion-item>
+        <ion-label class="text-bold" color="light">{{ getCurrentFriend.name }}</ion-label>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
   <ion-list>
-    <ion-item *ngFor="let chat of chats">
+    <ion-item *ngFor="let chat of chats" lines="none">
       <ion-badge color="{{getCurrentFriend.id === chat.m_sender ? 'tertiary' : 'light'}}" style="padding:10px 15px;" slot="{{ getCurrentFriend.id === chat.m_sender ? 'start' : 'end'}}">
         {{ chat.m_content }}
       </ion-badge>

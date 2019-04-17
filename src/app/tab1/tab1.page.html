@@ -4,7 +4,7 @@
             <ion-avatar slot="start">
                 <img src="http://localhost/smartchat_api/img/{{chat.user.avatar}}">
             </ion-avatar>
-            <ion-label (click)="chatInfos(chat)">
+            <ion-label (click)="chatInfos(chat.user)">
                 <ion-label class="text-bold" color="light">{{chat.user.name}}</ion-label>
                 <p class="text-muted">{{chat.m_content}}</p>
             </ion-label>

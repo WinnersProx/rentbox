@@ -1,6 +1,19 @@
-ion-content{
-    .toolbar-avatar{
-        height: 80px;
-        width:80px;
+ion-content, ion-header{
+
+    ion-avatar{
+        height: 45px;
+        width:45px;
     }
+    .text-bold{
+        font-family: inherit;
+        font-weight: 550;
+        padding-left:.4em;
+    }
+    .text-muted{
+        font-weight: normal;
+        font-style: unset;
+        font-family: unset;
+        color:gray;
+    }
+    
 }

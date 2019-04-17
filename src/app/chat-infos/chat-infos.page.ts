@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ChatsService } from '../services/chats.service';
 import { ActivatedRoute } from '@angular/router';
+import { ModalController, NavParams } from '@ionic/angular';
 @Component({
   selector: 'app-chat-infos',
   templateUrl: './chat-infos.page.html',
@@ -8,17 +9,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ChatInfosPage implements OnInit {
   private chats:any = [];
-  private friendId:number;
-  private currentFriend:Object = {};
-  constructor(private Chats : ChatsService, private Aroute : ActivatedRoute){
+  constructor(private Chats : ChatsService, private Aroute : ActivatedRoute, private modal : ModalController, private params : NavParams){
     // injections
   }
   ngOnInit() {
-    this.friendId = parseInt(this.Aroute.snapshot.paramMap.get('userId'));
-    console.log(this.friendId);
-    this.Chats.getFriendChats(this.friendId).subscribe(datas => {
+    console.log(this.getCurrentFriend);
+    //this.friendId = parseInt(this.Aroute.snapshot.paramMap.get('userId'));//route params
+    this.Chats.getFriendChats(parseInt(this.getCurrentFriend.id)).subscribe(datas => {
       this.chats = Object.values(datas)[0];
-      this.currentFriend = Object.values(datas)[1];
     }, 
     error => {
       console.log("An error occured", error);
@@ -27,8 +25,12 @@ export class ChatInfosPage implements OnInit {
     
   }
   get getCurrentFriend(){
-    return this.currentFriend;
+    return this.params.get('chatInfos');
   }
-  
+  dismiss(){
+    this.modal.dismiss().then(modal => {
+      console.log("Modal dismissed");
+    })
+  }
 
 }
